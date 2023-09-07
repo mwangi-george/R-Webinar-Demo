@@ -9,6 +9,7 @@ library(tidyverse)
 
 view(diamonds)
 
+# top 6 rows
 head(diamonds)
 
 # Box plot
