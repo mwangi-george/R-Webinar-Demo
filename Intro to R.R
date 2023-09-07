@@ -4,6 +4,7 @@
 # Data Wrangling (dplyr)
 # Data Visualization (ggplot2)
 # Reporting (rmarkdonw)
+# shiny (interactive dashboards)
 
 library(tidyverse)
 
