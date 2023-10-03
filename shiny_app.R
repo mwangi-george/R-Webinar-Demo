@@ -40,7 +40,8 @@ ui <- dashboardPage(
 # Define server logic
 server <- function(input, output) {
   # Load the diamonds dataset
-  diamonds_data <- diamonds
+  diamonds_data <- diamonds %>% 
+    head(n = 5000)
   
   # Create an overview summary
   output$overview_text <- renderPrint({

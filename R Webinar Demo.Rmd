@@ -1,0 +1,134 @@
+---
+title: "Introduction to R"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
+author: 
+  - name: George N. Mwangi
+    email: george_mwangi@insupplyhealth.com
+    affiliation: '[inSupply Health Ltd](https://insupplyhealth.com)'
+output: 
+    rmdformats::readthedown:
+      df_print: paged
+      number_sections: true
+      code_folding: hide    
+      toc_float: true
+      keep_md: true
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Set Up
+
+Use `install.packages("package_name")` to install packages from CRAN and `library(package_name)` to load packages for use in your current session.
+
+```{r}
+# Installing a package 
+# install.packages("tidyverse")
+
+# Loading the package for use
+# library(tidyverse)
+pacman::p_load(tidyverse)
+```
+
+# Data Exploration
+
+-   **Dataset Structure**
+
+```{r}
+# Data structure
+diamonds %>% glimpse()
+```
+
+-   **Top Rows in the Dataset**
+
+```{r}
+# top 6 rows
+diamonds %>% head()
+```
+
+-   **Distribution of Categorical variables**
+
+```{r}
+# How many cut types are there
+diamonds %>% count(cut)
+```
+
+-   **Dataset Summary Statistics**
+
+```{r}
+# Summary Statistics
+diamonds %>% summary()
+```
+
+# Data Visualization
+
+-   **Most tidyverse functions take a dataset as their first argument**
+
+## Scatter Plot
+
+```{r message=FALSE}
+# Example of a Scatter Plot 
+diamonds %>%                                                                    # the data
+  sample_n(size = 1000) %>%                                                     # Sample a few rows
+  ggplot(aes(x = carat, y = price, color = "lightsalmon"))+                     # Aesthetics mapping 
+  geom_point(show.legend = F, alpha = .5)+                                      # Geom layer (Adding Scatter points)
+  geom_smooth(method = "lm")+                                                   # Another geom layer (Add a smooth line)
+  labs(title =  "Relationship between Price and Carat in the Diamonds Dataset")+# Adding plot title
+  theme(legend.position = "none")+                                              # Remove unnecessary Legend
+  theme_bw()                                                                    # Add a theme
+```
+
+## Box Plot
+
+```{r}
+# Example of a Box plot
+diamonds %>%                                                             # the data
+  ggplot(aes(x = cut, y = price, fill = cut))+                           # Aesthetics mapping 
+  geom_boxplot(show.legend = F)+                                         # geom layer
+  labs(title =  "Distribution of Price by Cut in the Diamonds Dataset")+ # adding plot title
+  theme_bw()                                                             # Theme for the plot
+```
+
+## Histogram
+
+```{r}
+# Example of Histogram
+diamonds %>%  
+  ggplot(aes(x = price))+                                 
+  geom_histogram(fill = "steelblue", bins = 30)+
+  labs(title =  "Distribution of Price in the Diamonds Dataset")+ 
+  theme_bw()
+```
+
+## Line Graphs for Time Series Data
+
+```{r}
+# Plotting time series data
+library(timetk)
+
+m4_daily %>%                     # the data set 
+  filter(id == "D10") %>%        # filter for a specific group
+  plot_time_series(              # Plotting function; two major arguments (date and value)
+    .date_var = date, .value = value, .x_lab = "Date", .y_lab = "Value",.interactive = T
+    )
+```
+
+## Anomaly detection
+
+```{r message=FALSE}
+# Checking Anomalies in data
+m4_daily %>%                      # the data set 
+  filter(id == "D10") %>%         # filter for a specific group
+  plot_anomaly_diagnostics(       # Plotting function; two major Arguments (date and value)
+    .date_var = date, .value = value, .x_lab = "Date", .y_lab = "Value",.interactive = T
+  )
+```
+
+## Visualizing Seasonality features in time series data
+
+```{r fig.height=13, message=FALSE}
+m4_daily %>%                    # the data set 
+  filter(id == "D10") %>%       # filter for a specific group
+  plot_seasonal_diagnostics(    # Plotting function; takes two major Arguments (date and value)
+    .date_var = date, .value = value, .x_lab = "Date", .y_lab = "Value",.interactive = T
+  )
+```
